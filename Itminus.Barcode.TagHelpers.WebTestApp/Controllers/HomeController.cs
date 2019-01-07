@@ -7,7 +7,6 @@ using Itminus.Barcode.TagHelpers.WebTestApp;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using WebTestApp.Models;
 
 namespace WebTestApp.Controllers
 {
@@ -23,15 +22,5 @@ namespace WebTestApp.Controllers
             return View(this._barcodeOptions);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }
