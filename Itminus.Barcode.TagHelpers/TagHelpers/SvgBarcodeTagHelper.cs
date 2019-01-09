@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using Microsoft.AspNetCore.Html;
@@ -19,16 +20,11 @@ namespace Itminus.Barcode.TagHelpers
         {
             if (String.IsNullOrEmpty(this.Content))
                 return;
+            var encodingOpts = this.CreateOptions();
             var qrWriter = new ZXing.BarcodeWriterSvg
             {
                 Format = this.ConvertBarcodeFormat(this.BarcodeFormat),
-                Options = new EncodingOptions
-                {
-                    Height = this.Height,
-                    Width = this.Width,
-                    Margin = this.Margin,
-                    PureBarcode = this.PureBarcode,
-                }
+                Options = encodingOpts,             
             };
             var svgImage = qrWriter.Write(this.Content);
             var base64 = Convert.ToBase64String( System.Text.Encoding.UTF8.GetBytes(svgImage.Content));

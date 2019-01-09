@@ -12,14 +12,14 @@ namespace WebTestApp.Controllers
 {
     public class HomeController : Controller
     {
-        private BarcodeOptions _barcodeOptions;
-
-        public HomeController(IOptions<BarcodeOptions> barcodeOptions) {
-            this._barcodeOptions = barcodeOptions.Value;
-        }
-        public IActionResult Index()
+        public IActionResult QR_Code([FromBody]BarcodeOptions barcodeOptions)
         {
-            return View(this._barcodeOptions);
+            return View(barcodeOptions);
+        }
+
+        public IActionResult Code_128([FromBody]BarcodeOptions barcodeOptions)
+        {
+            return View(barcodeOptions);
         }
 
     }

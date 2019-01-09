@@ -18,6 +18,7 @@ namespace Itminus.Barcode.TagHelpers
         public int Width { get; set; } = 1;
         public int Margin { get; set; }
         public string Alt { get; set; }
+        public string Charset { get; set; }
 
         public string Content { get; set; }
 
@@ -38,20 +39,29 @@ namespace Itminus.Barcode.TagHelpers
             return (ZXing.BarcodeFormat) barcodeFormat;
         }
 
+        protected virtual EncodingOptions CreateOptions() {
+            var encodingOpts = new EncodingOptions
+            {
+                Height = this.Height,
+                Width = this.Width,
+                Margin = this.Margin,
+                PureBarcode = this.PureBarcode,
+            };
+            if (!String.IsNullOrEmpty(this.Charset) ){
+                encodingOpts.Hints.Add(EncodeHintType.CHARACTER_SET, this.Charset);
+            }
+            return encodingOpts;
+        }
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (String.IsNullOrEmpty(this.Content))
                 return;
+            var encodingOpts = this.CreateOptions();
             BarcodeWriter writer = new BarcodeWriter()
             {
                 Format = this.ConvertBarcodeFormat(this.BarcodeFormat),
-                Options = new EncodingOptions
-                {
-                    Height = this.Height,
-                    Width = this.Width,
-                    PureBarcode = this.PureBarcode,
-                    Margin = this.Margin,
-                },
+                Options = encodingOpts,
             };
             var bitmap = writer.Write(this.Content);
             string base64 = null;

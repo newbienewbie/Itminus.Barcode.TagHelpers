@@ -10,7 +10,10 @@
 
 <div class="text-center">
     <BitmapBarcode width="@Model.Width" height="@Model.Height" margin="@Model.Margin"
-                   content="@Model.Content" alt="@Model.Alt"
-                   barcode-format="QR_CODE"
-                   image-format="System.Drawing.Imaging.ImageFormat.Png"></BitmapBarcode>
+       content="@Model.Content" alt="@Model.Alt"
+       barcode-format="QR_CODE"
+       image-format="System.Drawing.Imaging.ImageFormat.Png"
+       charset="@Model.Charset"
+    >
+    </BitmapBarcode>
 </div>

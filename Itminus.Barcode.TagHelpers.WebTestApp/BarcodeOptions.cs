@@ -12,5 +12,6 @@ namespace Itminus.Barcode.TagHelpers.WebTestApp
         public int Margin{ get; set; }
         public string Content{ get; set; }
         public string Alt{ get; set; }
+        public string Charset{ get; set; }
     }
 }

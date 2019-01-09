@@ -20,36 +20,67 @@ namespace Itminus.Barcode.TagHelpers.Test
     {
         private TestServer _testServer;
         private HttpClient _client;
-        private IConfigurationRoot _config;
-        private BarcodeOptions _barcodeOpts;
 
         public IntegrationTest() {
-            var p = Path.GetDirectoryName((typeof(Startup).Assembly.Location));
-            this._config= new ConfigurationBuilder()
-                .SetBasePath(p)
-                .AddJsonFile("appsettings.json")
-                .Build();
-            this._barcodeOpts= this._config.GetSection("Barcode").Get<BarcodeOptions>();
             var hb = new WebHostBuilder()
-                .UseConfiguration(this._config)
                 .UseStartup<Startup>()
                 ;
             this._testServer = new TestServer(hb);
             this._client = _testServer.CreateClient();
         }
 
-
-        [Fact]
-        public void TestJpeg()
+        [Theory]
+        [InlineData("1234567890",null,100,200,10)]
+        [InlineData("Abcd1208sdf","",100,200,10)]
+        [InlineData("++84-*!","",100,200,10)]
+        [InlineData("++84-*!","UTF-8",100,200,10)]
+        [InlineData("https://github.com","UTF-8",100,200,10)]
+        public void TestQR128(string content,string charset, int width, int height, int margin)
         {
-            var resp = this._client.GetAsync("/home/index").Result;
+            var opts = new BarcodeOptions() {
+                Width= width,
+                Height = height,
+                Margin = margin,
+                Content = content,
+                Charset = charset,
+                Alt ="test",
+            };
+            var resp=this._client.PostAsJsonAsync("/home/code_128",opts).Result;
+            //var resp = this._client.GetAsync("/home/index?").Result;
             Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
-            var content=resp.Content.ReadAsStringAsync().Result;
+            var respContent=resp.Content.ReadAsStringAsync().Result;
             var parser= new HtmlParser();
-            var doc =parser.ParseDocument(content);
+            var doc =parser.ParseDocument(respContent);
             var img =doc.QuerySelector("img");
-            Assert.Equal(Convert.ToInt32(img.GetAttribute("width")),this._barcodeOpts.Width);
-            Assert.Equal(Convert.ToInt32(img.GetAttribute("height")),this._barcodeOpts.Height);
+            Assert.Equal(Convert.ToInt32(img.GetAttribute("width")),opts.Width);
+            Assert.Equal(Convert.ToInt32(img.GetAttribute("height")),opts.Height);
+        }
+
+
+        [Theory]
+        [InlineData("https://www.itminus.com",null,100,200,10)]
+        [InlineData("https://www.itminus.com","",100,200,10)]
+        [InlineData("ÄãºÃ","UTF-8",100,200,10)]
+        [InlineData("https://github.com","UTF-8",100,200,10)]
+        public void TestQRCode(string content,string charset, int width, int height, int margin)
+        {
+            var opts = new BarcodeOptions() {
+                Width= width,
+                Height = height,
+                Margin = margin,
+                Content = content,
+                Charset = charset,
+                Alt ="test",
+            };
+            var resp=this._client.PostAsJsonAsync("/home/qr_code",opts).Result;
+            //var resp = this._client.GetAsync("/home/index?").Result;
+            Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
+            var respContent=resp.Content.ReadAsStringAsync().Result;
+            var parser= new HtmlParser();
+            var doc =parser.ParseDocument(respContent);
+            var img =doc.QuerySelector("img");
+            Assert.Equal(Convert.ToInt32(img.GetAttribute("width")),opts.Width);
+            Assert.Equal(Convert.ToInt32(img.GetAttribute("height")),opts.Height);
         }
 
     }
