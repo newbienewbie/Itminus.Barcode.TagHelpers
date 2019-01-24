@@ -35,7 +35,7 @@ namespace Itminus.Barcode.TagHelpers.Test
         [InlineData("++84-*!","",100,200,10)]
         [InlineData("++84-*!","UTF-8",100,200,10)]
         [InlineData("https://github.com","UTF-8",100,200,10)]
-        public void TestQR128(string content,string charset, int width, int height, int margin)
+        public async Task TestQR128(string content,string charset, int width, int height, int margin)
         {
             var opts = new BarcodeOptions() {
                 Width= width,
@@ -45,10 +45,10 @@ namespace Itminus.Barcode.TagHelpers.Test
                 Charset = charset,
                 Alt ="test",
             };
-            var resp=this._client.PostAsJsonAsync("/home/code_128",opts).Result;
+            var resp= await this._client.PostAsJsonAsync("/home/code_128",opts);
             //var resp = this._client.GetAsync("/home/index?").Result;
             Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
-            var respContent=resp.Content.ReadAsStringAsync().Result;
+            var respContent= await resp.Content.ReadAsStringAsync();
             var parser= new HtmlParser();
             var doc =parser.ParseDocument(respContent);
             var img =doc.QuerySelector("img");
@@ -60,9 +60,9 @@ namespace Itminus.Barcode.TagHelpers.Test
         [Theory]
         [InlineData("https://www.itminus.com",null,100,200,10)]
         [InlineData("https://www.itminus.com","",100,200,10)]
-        [InlineData("���","UTF-8",100,200,10)]
+        [InlineData("学习雷锋好榜样","UTF-8",100,200,10)]
         [InlineData("https://github.com","UTF-8",100,200,10)]
-        public void TestQRCode(string content,string charset, int width, int height, int margin)
+        public async Task TestQRCode(string content,string charset, int width, int height, int margin)
         {
             var opts = new BarcodeOptions() {
                 Width= width,
@@ -72,10 +72,10 @@ namespace Itminus.Barcode.TagHelpers.Test
                 Charset = charset,
                 Alt ="test",
             };
-            var resp=this._client.PostAsJsonAsync("/home/qr_code",opts).Result;
+            var resp= await this._client.PostAsJsonAsync("/home/qr_code",opts);
             //var resp = this._client.GetAsync("/home/index?").Result;
             Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
-            var respContent=resp.Content.ReadAsStringAsync().Result;
+            var respContent=await resp.Content.ReadAsStringAsync();
             var parser= new HtmlParser();
             var doc =parser.ParseDocument(respContent);
             var img =doc.QuerySelector("img");
