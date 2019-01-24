@@ -12,6 +12,11 @@ namespace WebTestApp.Controllers
 {
     public class HomeController : Controller
     {
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         public IActionResult QR_Code([FromBody]BarcodeOptions barcodeOptions)
         {
             return View(barcodeOptions);

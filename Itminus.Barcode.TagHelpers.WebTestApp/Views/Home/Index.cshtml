@@ -1,0 +1,50 @@
+﻿@model Itminus.Barcode.TagHelpers.WebTestApp.BarcodeOptions
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div class="container">
+    <div class="row">
+    <div class="col-6">
+        <BitmapBarcode width="300" height="400" margin="10"
+                       content="https://www.itminus.com" alt="itminus"
+                       barcode-format="CODE_128"
+                       charset="UTF-8"
+                       image-format="System.Drawing.Imaging.ImageFormat.Png"></BitmapBarcode>
+        <div>Barcode (PNG)</div>
+    </div>
+
+    <div class="col-6">
+        <BitmapBarcode width="300" height="400" margin="10"
+                       barcode-format="CODE_128"
+                       content="https://www.itminus.com" alt="itminus"
+                       charset="UTF-8"
+                       image-format="System.Drawing.Imaging.ImageFormat.Jpeg"></BitmapBarcode>
+        <div>Barcode (Jpg)</div>
+    </div>
+
+
+    <div class="col-6">
+        <BitmapBarcode width="300" height="400" margin="10"
+                       barcode-format="QR_CODE"
+                       content="https://www.itminus.com" alt="itminus"
+                       charset="UTF-8"
+                       image-format="System.Drawing.Imaging.ImageFormat.Png"></BitmapBarcode>
+        <div>QRCode (PNG)</div>
+
+    </div>
+    <div class="col-6">
+        <SvgBarcode content="Hello" alt="world"
+                    barcode-format="QR_CODE"
+                    width="300" height="400" margin="10">
+        </SvgBarcode>
+        <div>QRCode (Svg)</div>
+    </div>
+
+    </div>
+</div>
